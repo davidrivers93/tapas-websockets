@@ -5,6 +5,11 @@
       const socket = io('http://localhost:3000');
       socket.on('connect', function() {
         console.log('Connected');
+        socket.emit('message', '123123');
+      });
+
+      socket.on('message', message => {
+        console.log('Sent', message);
       });
     </script>
   </head>
