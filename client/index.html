@@ -10,6 +10,16 @@
     </form>
     <script src="socket.io.js"></script>
     <script>
+      const USER_MATCH = /\/user\W/g;
+      function parseMessage(msg) {
+        if (msg.match(USER_MATCH)) {
+          socket.emit('changeUser', input.value.replace('/user ', ''));
+        } else {
+          socket.emit('message', input.value);
+        }
+      }
+    </script>
+    <script>
       const socket = io('http://localhost:3000');
       const form = document.getElementById('form');
       const input = document.getElementById('input');
@@ -29,7 +39,6 @@
         e.preventDefault();
         if (input.value) {
           parseMessage(input.value);
-          socket.emit('message', input.value);
           input.value = '';
         }
       });
