@@ -80,33 +80,33 @@ body {
   border-top-right-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
 }
-.chatbox__user-list h1 {
+
+.chatbox__user {
+  display: flex;
+  align-items: center;
+  margin: 1em 0em;
+}
+
+h1 {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9em;
+  font-size: 1em;
   padding: 1em;
   margin: 0;
-  font-weight: 300;
+  font-weight: 500;
   text-align: center;
 }
-.chatbox__user,
-.chatbox__user--away,
-.chatbox__user--busy,
-.chatbox__user--active {
+
+.chatbox__user--active--bullet {
   width: 0.5em;
   height: 0.5em;
   border-radius: 100%;
-  margin: 1em 0.7em;
 }
-.chatbox__user--active {
+
+.chatbox__user--active--bullet {
   background: rgba(23, 190, 187, 0.8);
 }
-.chatbox__user--busy {
-  background: rgba(252, 100, 113, 0.8);
-}
-.chatbox__user--away {
-  background: rgba(255, 253, 130, 0.8);
-}
+
 .chatbox p {
   float: left;
   text-align: left;
@@ -115,11 +115,13 @@ body {
   font-weight: 300;
   color: #fff;
 }
+
 .chatbox form {
   background: #222;
 }
+
 .chatbox form input {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   position: absolute;
   bottom: 0;
   left: 0;

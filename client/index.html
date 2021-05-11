@@ -7,17 +7,20 @@
     <div class="chatbox" ng-controller="MessageCtrl as chatMessage">
       <div class="chatbox__user-list">
         <h1>User list</h1>
-        <div class="chatbox__user--active"></div>
+        <div id="users"></div>
       </div>
-      <div id="messages" class="chatbox__messages"></div>
+      <div id="messages" class="chatbox__messages">
+        <h1>Messages</h1>
+      </div>
       <form id="form" action="">
-        <input id="input" autocomplete="off" />
+        <input id="input" autocomplete="off" placeholder="Type your message" />
       </form>
     </div>
     <script src="socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="./components/parseMessage.js"></script>
     <script src="./components/message.js"></script>
+    <script src="./components/user.js"></script>
     <script src="./components/listener.js"></script>
   </body>
 </html>

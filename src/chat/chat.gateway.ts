@@ -12,6 +12,10 @@ import {
 
 import { Server, Socket } from 'socket.io';
 
+const MESSAGE_KEY = 'message';
+const CHANGE_USER_KEY = 'changeUser';
+const USER_LIST_KEY = 'users';
+
 @WebSocketGateway()
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -22,30 +26,27 @@ export class ChatGateway
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('message')
+  @SubscribeMessage(MESSAGE_KEY)
   handleChatMessage(
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ): void {
-    this.server.emit('message', {
-      message,
-      name: this.users[client.id] || 'Unnamed',
-      date: new Date(),
-    });
+    const name = this.users[client.id] || 'Unnamed';
+    this.emitMessage(message, name);
   }
 
-  @SubscribeMessage('changeUser')
+  @SubscribeMessage(CHANGE_USER_KEY)
   handleChangeUser(
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ): void {
     const oldUserName = this.users[client.id];
     this.users[client.id] = message;
-    this.server.emit('message', {
-      message: `${oldUserName || 'Unknown'} has changed his name to ${message}`,
-      name: 'Admin',
-      date: new Date(),
-    });
+    const msgToSend = `${oldUserName ||
+      'Unknown'} has changed his name to ${message}`;
+
+    this.emitMessage(msgToSend, 'Admin');
+    this.sendUsers();
   }
 
   afterInit(server: Server) {
@@ -53,11 +54,31 @@ export class ChatGateway
   }
 
   handleDisconnect(client: Socket) {
-    this.users[client.id] = client.id;
+    delete this.users[client.id];
+    this.sendUsers();
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    this.users[client.id] = client.id;
+    this.sendUsers();
     this.logger.log(`Client connected: ${client.id}`);
+  }
+
+  private sendUsers(): void {
+    const users = Object.values(this.users);
+    this.emitMessage(users, 'Admin', USER_LIST_KEY);
+  }
+
+  private emitMessage(
+    message: string | string[],
+    name: string,
+    key = MESSAGE_KEY,
+  ): void {
+    this.server.emit(key, {
+      message,
+      name,
+      date: new Date(),
+    });
   }
 }
