@@ -39,7 +39,13 @@ export class ChatGateway
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ): void {
+    const oldUserName = this.users[client.id];
     this.users[client.id] = message;
+    this.server.emit('message', {
+      message: `${oldUserName || 'Unknown'} has changed his name to ${message}`,
+      name: 'Admin',
+      date: new Date(),
+    });
   }
 
   afterInit(server: Server) {
