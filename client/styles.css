@@ -148,3 +148,22 @@ h1 {
 :-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.9);
 }
+
+.notifications {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+
+.notification__danger {
+  margin: 15px auto;
+  display: block;
+  background: black;
+  width: 500px;
+  border: 1px rgba(0, 0, 0, 0.1) solid;
+  background-color: rgba(23, 190, 187, 1);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  font-size: 12px;
+}

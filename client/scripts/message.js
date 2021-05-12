@@ -5,6 +5,14 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(msg) {
+  if (msg.isPrivate) {
+    placeNotification(msg.message);
+  } else {
+    placeChatMessage(msg);
+  }
+});
+
+function placeChatMessage(msg) {
   var container = document.createElement('div');
   container.classList = 'chatbox__messages__user-message';
 
@@ -31,4 +39,4 @@ socket.on('message', function(msg) {
 
   messages.appendChild(container);
   window.scrollTo(0, document.body.scrollHeight);
-});
+}

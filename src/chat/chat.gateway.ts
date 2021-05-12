@@ -11,10 +11,14 @@ import {
 } from '@nestjs/websockets';
 
 import { Server, Socket } from 'socket.io';
+import { getSymbolPrice } from 'src/lib/price';
 
 const MESSAGE_KEY = 'message';
 const CHANGE_USER_KEY = 'changeUser';
+const GET_PRICE_KEY = 'getPrice';
 const USER_LIST_KEY = 'users';
+
+const ADMIN = 'Admin';
 
 @WebSocketGateway()
 export class ChatGateway
@@ -25,6 +29,25 @@ export class ChatGateway
 
   @WebSocketServer()
   server: Server;
+
+  @SubscribeMessage(GET_PRICE_KEY)
+  async handleGetPriceMessage(
+    @MessageBody() symbol: string,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    try {
+      const name = this.users[client.id] || 'Unnamed';
+      const price = await getSymbolPrice(symbol);
+      const msg = `User ${name} has requested the price for ${symbol} symbol. Current price is ${price}`;
+      this.emitMessage(msg, ADMIN);
+    } catch (error) {
+      client.send({
+        isPrivate: true,
+        message: 'You have entered a wrong symbol',
+        name: ADMIN,
+      });
+    }
+  }
 
   @SubscribeMessage(MESSAGE_KEY)
   handleChatMessage(
@@ -37,15 +60,21 @@ export class ChatGateway
 
   @SubscribeMessage(CHANGE_USER_KEY)
   handleChangeUser(
-    @MessageBody() message: string,
+    @MessageBody() newName: string,
     @ConnectedSocket() client: Socket,
   ): void {
     const oldUserName = this.users[client.id];
-    this.users[client.id] = message;
+    this.users[client.id] = newName;
     const msgToSend = `${oldUserName ||
-      'Unknown'} has changed his name to ${message}`;
+      'Unknown'} has changed his name to ${newName}`;
 
-    this.emitMessage(msgToSend, 'Admin');
+    this.emitMessage(msgToSend, ADMIN);
+    client.send({
+      isPrivate: true,
+      message: `Now, your name  is ${newName}`,
+      name: ADMIN,
+    });
+
     this.sendUsers();
   }
 
@@ -67,7 +96,7 @@ export class ChatGateway
 
   private sendUsers(): void {
     const users = Object.values(this.users);
-    this.emitMessage(users, 'Admin', USER_LIST_KEY);
+    this.emitMessage(users, ADMIN, USER_LIST_KEY);
   }
 
   private emitMessage(
