@@ -9,12 +9,20 @@
         <h1>User list</h1>
         <div id="users"></div>
       </div>
-      <div id="messages" class="chatbox__messages">
-        <h1>Messages</h1>
+      <div class="flex">
+        <div id="messages" class="chatbox__messages">
+          <h1>Messages</h1>
+        </div>
+        <div class="form">
+          <form id="form" action="">
+            <input
+              id="input"
+              autocomplete="off"
+              placeholder="Type your message"
+            />
+          </form>
+        </div>
       </div>
-      <form id="form" action="">
-        <input id="input" autocomplete="off" placeholder="Type your message" />
-      </form>
     </div>
     <div id="notifications" class="notifications"></div>
     <script src="socket.io.js"></script>

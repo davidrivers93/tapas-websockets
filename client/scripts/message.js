@@ -38,5 +38,6 @@ function placeChatMessage(msg) {
   container.appendChild(div);
 
   messages.appendChild(container);
-  window.scrollTo(0, document.body.scrollHeight);
+
+  messages.scrollTo(0, messages.scrollHeight);
 }

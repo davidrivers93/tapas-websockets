@@ -35,16 +35,6 @@ body {
   box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);
 }
 
-.chatbox__messages:nth-of-type(odd)
-  .chatbox__messages__user-message--ind-message {
-  float: right;
-}
-
-.chatbox__messages:nth-of-type(even)
-  .chatbox__messages__user-message--ind-message {
-  float: left;
-}
-
 .chatbox__messages__user-message {
   width: 100%;
 }
@@ -116,13 +106,7 @@ h1 {
   color: #fff;
 }
 
-.chatbox form {
-  background: #222;
-}
-
 .chatbox form input {
-  background: rgba(255, 255, 255, 0.05);
-  position: absolute;
   bottom: 0;
   left: 0;
   border: none;
@@ -131,6 +115,7 @@ h1 {
   outline: none;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 300;
+  background-color: transparent;
 }
 
 ::-webkit-input-placeholder {
@@ -166,4 +151,15 @@ h1 {
   border-radius: 8px;
   color: white;
   font-size: 12px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#messages {
+  overflow: auto;
+  height: 100%;
 }
